@@ -33,10 +33,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="16dp"
             android:layout_weight="1"
             tools:text="Feb 2, 2016"
             android:id="@+id/earthquake_date"/>
+
+        <TextView
+            android:id="@+id/earthquake_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:text="3:00 PM"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 

@@ -64,7 +64,7 @@ public class QueryUtils  {
                 //Get the value of place from the properties object
                 String place = propertiesObject.optString("place");
                 //Get the value of time from the properties object
-                String time = propertiesObject.optString("time");
+                long time = propertiesObject.getLong("time");
 
                 //Add the three values to the Earthquake array list
                 earthquakes.add(new Earthquake(magnitude, place, time));
