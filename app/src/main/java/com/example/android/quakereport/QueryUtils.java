@@ -59,8 +59,8 @@ public class QueryUtils  {
                 //Get the JSON object in the properties object
                 JSONObject propertiesObject = earthquakeObject.optJSONObject("properties");
 
-                //Get the value of mag from the properties object
-                String magnitude = propertiesObject.optString("mag");
+                //Get the value of "mag" from the "properties" object
+                Double magnitude = propertiesObject.getDouble("mag");
                 //Get the value of place from the properties object
                 String place = propertiesObject.optString("place");
                 //Get the value of time from the properties object
