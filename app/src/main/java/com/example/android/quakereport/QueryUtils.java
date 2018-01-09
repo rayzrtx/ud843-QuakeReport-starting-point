@@ -65,9 +65,11 @@ public class QueryUtils  {
                 String place = propertiesObject.optString("place");
                 //Get the value of time from the properties object
                 long time = propertiesObject.getLong("time");
+                // Extract the value for the key called "url"
+                String url = propertiesObject.getString("url");
 
-                //Add the three values to the Earthquake array list
-                earthquakes.add(new Earthquake(magnitude, place, time));
+                //Add the four values to the Earthquake array list
+                earthquakes.add(new Earthquake(magnitude, place, time, url));
             }
 
             // TODO: Parse the response given by the SAMPLE_JSON_RESPONSE string and
