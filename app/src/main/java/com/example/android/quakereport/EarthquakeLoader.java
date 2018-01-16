@@ -21,6 +21,13 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
     /** Query URL */
     private String mUrl;
 
+
+    /**
+     * Constructs a new {@link EarthquakeLoader}.
+     *
+     * @param context of the activity
+     * @param url to load data from
+     */
     public EarthquakeLoader(Context context, String url){
         super(context);
         mUrl = url;

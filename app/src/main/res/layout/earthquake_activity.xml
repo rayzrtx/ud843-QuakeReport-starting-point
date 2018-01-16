@@ -31,7 +31,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textColor="@color/textColorEarthquakeDetails"
-        android:text="@string/no_earthquakes"
         android:textSize="16sp" />
 
     <!-- Loading indicator is only shown before the first load -->
