@@ -15,9 +15,10 @@
  */
 package com.example.android.quakereport;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -29,21 +30,32 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EarthquakeActivity extends AppCompatActivity {
+public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
 
     /**
      * URL to query the USGS dataset for earthquake information
      */
     private static final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=5&limit=10";
 
+    /**
+     * Constant value for the earthquake loader ID. We can choose any integer.
+     * This really only comes into play if you're using multiple loaders.
+     */
+    private static final int EARTHQUAKE_LOADER_ID = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        // Kick off an {@link AsyncTask} to perform the network request
-        EarthquakeAsyncTask task = new EarthquakeAsyncTask();
-        task.execute(USGS_REQUEST_URL);
+        // Get a reference to the LoaderManager, in order to interact with loaders.
+        LoaderManager loaderManager = getLoaderManager();
+
+        // Initialize the loader. Pass in the int ID constant defined above and pass in null for
+        // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+        // because this activity implements the LoaderCallbacks interface).
+        loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+
     }
 
     private void updateUI(final List<Earthquake> earthquakeList) {
@@ -75,45 +87,23 @@ public class EarthquakeActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * {@link AsyncTask} to perform the network request on a background thread, and then
-     * update the UI with the list of earthquakes in the response.
-     * <p>
-     * AsyncTask has three generic parameters: the input type, a type used for progress updates, and
-     * an output type. Our task will take a String URL, and return an Earthquake. We won't do
-     * progress updates, so the second generic is just Void.
-     * <p>
-     * We'll only override two of the methods of AsyncTask: doInBackground() and onPostExecute().
-     * The doInBackground() method runs on a background thread, so it can run long-running code
-     * (like network activity), without interfering with the responsiveness of the app.
-     * Then onPostExecute() is passed the result of doInBackground() method, but runs on the
-     * UI thread, so it can use the produced data to update the UI.
-     */
-    private class EarthquakeAsyncTask extends AsyncTask<String, Void, List<Earthquake>> {
+    @Override
+    public Loader<List<Earthquake>> onCreateLoader(int id, Bundle bundle) {
+        // Create a new loader for the given URL
+        return new EarthquakeLoader(this, USGS_REQUEST_URL);
+    }
 
-        @Override
-        protected List<Earthquake> doInBackground(String... urls) {
-            // Don't perform the request if there are no URLs, or the first URL is null.
-            if (urls.length < 1 || urls[0] == null) {
-                return null;
-            }
-            // Create a list of earthquake objects using API data in QueryUtils class
-            List<Earthquake> earthquakeList = QueryUtils.fetchEarthquakeData(urls[0]);
-            return earthquakeList;
+    @Override
+    public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakeList) {
+        if (earthquakeList == null){
+            return;
         }
+        // Update the information displayed to the user.
+        updateUI(earthquakeList);
+    }
 
-        /**
-         * This method runs on the main UI thread after the background work has been
-         * completed. This method receives as input, the return value from the doInBackground()
-         * method.
-         */
-        @Override
-        protected void onPostExecute(List<Earthquake> earthquakeList) {
-            if (earthquakeList == null) {
-                return;
-            }
-            // Update the information displayed to the user.
-            updateUI(earthquakeList);
-        }
+    @Override
+    public void onLoaderReset(Loader<List<Earthquake>> loader) {
+        loader.reset();
     }
 }
