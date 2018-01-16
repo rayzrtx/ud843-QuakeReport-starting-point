@@ -27,6 +27,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     /**
      * URL to query the USGS dataset for earthquake information
      */
-    private static final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=4&limit=10";
+    private static final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=9&limit=10";
 
     /**
      * Constant value for the earthquake loader ID. We can choose any integer.
@@ -71,6 +72,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakeList) {
+        ProgressBar spinner = (ProgressBar) findViewById(R.id.loading_spinner);
+        spinner.setVisibility(View.GONE);
+
         if (earthquakeList == null){
             return;
         }
